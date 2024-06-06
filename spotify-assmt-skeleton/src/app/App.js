@@ -7,6 +7,8 @@ import Playlist from "../components/playlist/Playlist.jsx";
 function App() {
   // create state hooks that manages the characteristics of our application
   const [searchResults, setsearchResults] = useState([]);
+  const [playlistName, setplayListName] = useState("Create New Playlist");
+  const [playListTracks, setplayListTracks] = useState([]);
 
   // at the start of this app component, provide default values for searchResults (lifecycle hook)
   useEffect(() => {
@@ -32,6 +34,30 @@ function App() {
     ]);
   }, []);
 
+  function addTrack(track) {
+    const existTrack = playListTracks.find(
+      (currentTrack) => track.id === currentTrack.id
+    );
+    if (!existTrack) {
+      setplayListTracks([...playListTracks, track]);
+      return;
+    }
+  }
+
+  //function removeTrack will be passed to component Playlist
+  function removeTrack(track) {
+    const filteredTrack = playListTracks.filter(
+      (currentTrack) => track.id !== currentTrack.id
+    );
+    setplayListTracks(filteredTrack);
+  }
+  console.log(playListTracks);
+
+  //function savePlayListName to store a new play list name
+  function updatePlayListName(name) {
+    setplayListName(name);
+  }
+
   return (
     <div>
       <h1>
@@ -42,9 +68,13 @@ function App() {
         <SearchBar />
         <div className="App-playlist">
           {/* <!-- Add a SearchResults component --> */}
-          <SearchResults searchResults={searchResults} />
+          <SearchResults searchResults={searchResults} onAdd={addTrack} />
           {/* <!-- Add a Playlist component --> */}
-          <Playlist />
+          <Playlist
+            playlistName={playlistName}
+            playListTracks={playListTracks}
+            onRemove={removeTrack}
+          />
         </div>
       </div>
     </div>
