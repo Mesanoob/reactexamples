@@ -34,29 +34,36 @@ function App() {
     ]);
   }, []);
 
+  // function addTrack will be passed to component SearchResults
   function addTrack(track) {
+    // check whether track passed in is found in state playListTracks
     const existTrack = playListTracks.find(
       (currentTrack) => track.id === currentTrack.id
     );
-    if (!existTrack) {
-      setplayListTracks([...playListTracks, track]);
-      return;
-    }
+    // store track is only track is NOT found in state playListTracks
+    if (!existTrack) setplayListTracks([track, ...playListTracks]);
+
+    return;
+    // setplayListTracks.concat(track);
   }
 
-  //function removeTrack will be passed to component Playlist
+  // function removeTrack will be passed to component PlayList
   function removeTrack(track) {
+    // filter the playListTracks to return only those that are not one of the tracks passed in
     const filteredTrack = playListTracks.filter(
       (currentTrack) => track.id !== currentTrack.id
     );
+    // store the remaining / filtered tracks
     setplayListTracks(filteredTrack);
   }
-  console.log(playListTracks);
 
-  //function savePlayListName to store a new play list name
+  // function updatePlayListName stores a new play list name
   function updatePlayListName(name) {
+    // store the name in playlistName
     setplayListName(name);
   }
+
+  console.log(playlistName);
 
   return (
     <div>
@@ -74,6 +81,7 @@ function App() {
             playlistName={playlistName}
             playListTracks={playListTracks}
             onRemove={removeTrack}
+            onNameChange={updatePlayListName}
           />
         </div>
       </div>
