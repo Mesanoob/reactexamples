@@ -101,6 +101,8 @@ function App() {
             onSave={savePlaylist}
             playlistName={playlistName}
             playListTracks={playListTracks}
+            onRemove={removeTrack}
+            onNameChange={updatePlayListName}
           />
         </div>
       </div>
