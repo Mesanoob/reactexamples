@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import SearchBar from "../components/searchbar/SearchBar.jsx";
 import SearchResults from "../components/searchresults/SearchResults.jsx";
 import Playlist from "../components/playlist/Playlist.jsx";
+import Spotify from "../utils/Spotify.js";
 
 function App() {
   // create state hooks that manages the characteristics of our application
@@ -63,6 +64,24 @@ function App() {
     setplayListName(name);
   }
 
+  // function savePlaylist is to send the searched playlist to spotify
+  //pass the function itself to component Playlist
+  function savePlaylist() {
+    const trackURIs = playListTracks.map((track) => track.uri);
+    console.log(trackURIs);
+    // Once spotify has captured the new playlist, we reset playlistname and playlisttracks
+    Spotify.savePlaylist(playlistName, trackURIs).then(() => {
+      updatePlayListName("Create New Playlist");
+      setplayListTracks([]);
+    });
+  }
+
+  //func search calls Spotify API search request in Spotify.js
+  //returns the results and later store in state searchResults
+  function search(term) {
+    Spotify.search(term).then((result) => setsearchResults(result));
+  }
+
   console.log(playlistName);
 
   return (
@@ -72,16 +91,16 @@ function App() {
       </h1>
       <div className="App">
         {/* <!-- Add a SearchBar component --> */}
-        <SearchBar />
+        <SearchBar onSearch={search} />
         <div className="App-playlist">
           {/* <!-- Add a SearchResults component --> */}
           <SearchResults searchResults={searchResults} onAdd={addTrack} />
           {/* <!-- Add a Playlist component --> */}
+
           <Playlist
+            onSave={savePlaylist}
             playlistName={playlistName}
             playListTracks={playListTracks}
-            onRemove={removeTrack}
-            onNameChange={updatePlayListName}
           />
         </div>
       </div>
